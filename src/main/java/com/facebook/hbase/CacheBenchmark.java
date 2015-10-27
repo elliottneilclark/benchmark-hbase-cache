@@ -11,7 +11,7 @@ import org.openjdk.jmh.annotations.State;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Benchmark {
+public class CacheBenchmark {
 
 
   @State(Scope.Group)
