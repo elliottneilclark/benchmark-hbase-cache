@@ -3,6 +3,7 @@ package com.facebook.hbase;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Group;
 import org.openjdk.jmh.annotations.GroupThreads;
 import org.openjdk.jmh.annotations.Measurement;
@@ -16,9 +17,10 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Measurement(iterations = 5, time = 20, timeUnit = TimeUnit.SECONDS)
-@Warmup(iterations = 10, time = 2, timeUnit = TimeUnit.SECONDS)
-@Timeout(time = 15, timeUnit = TimeUnit.MINUTES)
+@Measurement(iterations = 10, time = 30, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 2, timeUnit = TimeUnit.SECONDS)
+@Timeout(time = 8, timeUnit = TimeUnit.MINUTES)
+@Fork(value = 5, jvmArgsPrepend = "-server")
 public class LocationCacheBenchmark {
 
   private String doGet(LocationCache c) {
