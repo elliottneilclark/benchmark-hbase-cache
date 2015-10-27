@@ -18,15 +18,10 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Measurement(iterations = 10, time = 10, timeUnit = TimeUnit.SECONDS)
-@Warmup(iterations = 10, time = 5, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
 @Timeout(time = 12, timeUnit = TimeUnit.MINUTES)
 @Fork(value = 5, jvmArgsPrepend = "-server")
 public class LocationCacheBenchmark {
-
-  private String doGet(LocationCache c) {
-    byte[] key = getKeyBytes();
-    return c.get(key);
-  }
 
   private byte[] getKeyBytes() {
     long l;
@@ -34,6 +29,11 @@ public class LocationCacheBenchmark {
       l = ThreadLocalRandom.current().nextLong();
     } while (l == Long.MIN_VALUE);
     return Bytes.toBytes(Math.abs(l));
+  }
+
+  private String doGet(LocationCache c) {
+    byte[] key = getKeyBytes();
+    return c.get(key);
   }
 
   private void doPut(LocationCache cache) {
