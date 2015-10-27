@@ -1,4 +1,4 @@
-package com.facebook.hbase;
+package com.facebook.hbase.caches;
 
 
 import org.apache.hadoop.hbase.util.Bytes;
@@ -17,13 +17,13 @@ public abstract class LocationCache {
   @Param({"5", "5000"})
   public int startingKeys;
 
-  abstract void add(byte[] key, String value);
+  public abstract void add(byte[] key, String value);
 
-  abstract String get(byte[] lookingFor);
+  public abstract String get(byte[] lookingFor);
 
-  abstract void remove(byte[] key);
+  public abstract void remove(byte[] key);
 
-  void addAll(Map<byte[], String> map) {
+  public void addAll(Map<byte[], String> map) {
     for (Map.Entry<byte[], String> e : map.entrySet()) {
       add(e.getKey(), e.getValue());
     }

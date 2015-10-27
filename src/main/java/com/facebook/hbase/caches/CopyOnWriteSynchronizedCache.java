@@ -1,4 +1,4 @@
-package com.facebook.hbase;
+package com.facebook.hbase.caches;
 
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -13,7 +13,7 @@ public class CopyOnWriteSynchronizedCache extends LocationCache {
       new AtomicReference<>(new TreeMap<byte[], String>(Bytes.BYTES_COMPARATOR));
 
   @Override
-  synchronized void add(byte[] key, String value) {
+  public synchronized void add(byte[] key, String value) {
     TreeMap<byte[], String> m = currentMap.get();
     TreeMap<byte[], String> newMap = new TreeMap<>(m);
 
@@ -21,7 +21,7 @@ public class CopyOnWriteSynchronizedCache extends LocationCache {
     currentMap.set(newMap);
   }
 
-  synchronized void addAll(Map<byte[], String> map) {
+  public synchronized void addAll(Map<byte[], String> map) {
     TreeMap<byte[], String> m = currentMap.get();
     TreeMap<byte[], String> newMap = new TreeMap<>(m);
 
@@ -32,7 +32,7 @@ public class CopyOnWriteSynchronizedCache extends LocationCache {
   }
 
   @Override
-  String get(byte[] lookingFor) {
+  public String get(byte[] lookingFor) {
     Map.Entry<byte[], String> e = currentMap.get().floorEntry(lookingFor);
     if (e != null) {
       return e.getValue();
@@ -41,7 +41,7 @@ public class CopyOnWriteSynchronizedCache extends LocationCache {
   }
 
   @Override
-  synchronized void remove(byte[] key) {
+  public synchronized void remove(byte[] key) {
     TreeMap<byte[], String> m = currentMap.get();
     TreeMap<byte[], String> newMap = new TreeMap<>(m);
 

@@ -1,4 +1,4 @@
-package com.facebook.hbase;
+package com.facebook.hbase.caches;
 
 import org.apache.hadoop.hbase.util.Bytes;
 

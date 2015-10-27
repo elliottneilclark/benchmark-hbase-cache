@@ -1,5 +1,10 @@
 package com.facebook.hbase;
 
+import com.facebook.hbase.caches.ConcurrentCache;
+import com.facebook.hbase.caches.CopyOnWriteCache;
+import com.facebook.hbase.caches.CopyOnWriteSynchronizedCache;
+import com.facebook.hbase.caches.LocationCache;
+import com.facebook.hbase.caches.ReadWriteLockingCache;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
