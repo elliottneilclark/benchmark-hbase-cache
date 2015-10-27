@@ -34,7 +34,7 @@ public class CopyOnWriteCache extends LocationCache {
   }
 
   @Override
-  synchronized void remove(byte[] key) {
+  void remove(byte[] key) {
     while (true) {
       TreeMap<byte[], String> m = currentMap.get();
       TreeMap<byte[], String> newMap = new TreeMap<byte[], String>(m);
