@@ -10,9 +10,8 @@ mvn clean package
 clear
 mvn -version
 
-for FT in csv json
-do
-  OFILE="result.${FT}"
-  [[ -f "$OFILE" ]] &&  rm ${OFILE}
-  java ${JAVA_ARGS} -jar target/benchmarks.jar -rf ${FT} -rff ${OFILE} "$@"
-done
+FT="csv"
+OFILE="result.${FT}"
+[[ -f "$OFILE" ]] &&  rm ${OFILE}
+java ${JAVA_ARGS} -jar target/benchmarks.jar -rf ${FT} -rff ${OFILE} "$@"
+

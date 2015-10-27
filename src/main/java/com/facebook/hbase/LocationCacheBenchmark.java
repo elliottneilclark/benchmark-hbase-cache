@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Measurement(iterations = 10, time = 30, timeUnit = TimeUnit.SECONDS)
-@Warmup(iterations = 5, time = 2, timeUnit = TimeUnit.SECONDS)
-@Timeout(time = 8, timeUnit = TimeUnit.MINUTES)
+@Warmup(iterations = 5, time = 30, timeUnit = TimeUnit.SECONDS)
+@Timeout(time = 10, timeUnit = TimeUnit.MINUTES)
 @Fork(value = 5, jvmArgsPrepend = "-server")
 public class LocationCacheBenchmark {
 
