@@ -5,10 +5,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-/**
- * Created by elliott on 10/26/15.
- */
-public class ConcurrentCache implements LocationCache {
+public class ConcurrentCache extends LocationCache {
   private ConcurrentSkipListMap<byte[], String>
       locations =
       new ConcurrentSkipListMap<byte[], String>(Bytes.BYTES_COMPARATOR);
