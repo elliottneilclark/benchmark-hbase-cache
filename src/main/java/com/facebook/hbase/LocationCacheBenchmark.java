@@ -3,6 +3,7 @@ package com.facebook.hbase;
 import com.facebook.hbase.caches.ConcurrentCache;
 import com.facebook.hbase.caches.CopyOnWriteCache;
 import com.facebook.hbase.caches.CopyOnWriteSynchronizedCache;
+import com.facebook.hbase.caches.CopyOnWriteVolatile;
 import com.facebook.hbase.caches.LocationCache;
 import com.facebook.hbase.caches.ReadWriteLockingCache;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -22,9 +23,9 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Measurement(iterations = 10, time = 10, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 10, time = 1, timeUnit = TimeUnit.MINUTES)
 @Warmup(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
-@Timeout(time = 12, timeUnit = TimeUnit.MINUTES)
+@Timeout(time = 15, timeUnit = TimeUnit.MINUTES)
 @Fork(value = 5, jvmArgsPrepend = "-server")
 public class LocationCacheBenchmark {
 
@@ -51,6 +52,32 @@ public class LocationCacheBenchmark {
     byte[] key = getKeyBytes();
     cache.remove(key);
   }
+
+
+  /******
+   * Copy On Write Volatile
+   ****************/
+  @Benchmark
+  @Group("cow_volatile")
+  @GroupThreads(20)
+  public String testGet(CopyOnWriteVolatile cache) {
+    return doGet(cache);
+  }
+
+  @Benchmark
+  @Group("cow_volatile")
+  @GroupThreads(2)
+  public void testPut(CopyOnWriteVolatile cache) {
+    doPut(cache);
+  }
+
+  @Benchmark
+  @Group("cow_volatile")
+  @GroupThreads(2)
+  public void testRemove(CopyOnWriteVolatile cache) {
+    doDelete(cache);
+  }
+
 
   /******
    * Copy On Write Synchronized

@@ -2,7 +2,6 @@ package com.facebook.hbase.caches;
 
 
 import org.apache.hadoop.hbase.util.Bytes;
-import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
@@ -14,8 +13,7 @@ import java.util.TreeMap;
 @State(Scope.Group)
 public abstract class LocationCache {
   private static final int SEED = 42;
-  @Param({"5", "5000"})
-  public int startingKeys;
+  private static final int STARTING_KEYS = 1000;
 
   public abstract void add(byte[] key, String value);
 
@@ -34,7 +32,7 @@ public abstract class LocationCache {
     Random r = new Random(SEED);
     Map<byte[], String> m = new TreeMap<>(Bytes.BYTES_COMPARATOR);
 
-    for (int i = 0; i < startingKeys; i++) {
+    for (int i = 0; i < STARTING_KEYS; i++) {
       long l;
       do {
         l = r.nextLong();
