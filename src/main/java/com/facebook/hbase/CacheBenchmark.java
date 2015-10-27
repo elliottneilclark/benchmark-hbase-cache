@@ -13,6 +13,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class CacheBenchmark {
 
+  private static final int SEED = 42;
+  private static long STARTING_ROWS = 1000L;
 
   @State(Scope.Group)
   public static class LockingCache {
@@ -20,16 +22,15 @@ public class CacheBenchmark {
 
     @Setup
     public void setup() {
-      Random r = new Random(42);
+      Random r = new Random(SEED);
 
-      for ( int i = 0; i < 1000; i++) {
+      for ( int i = 0; i < STARTING_ROWS; i++) {
         long key = Math.abs(r.nextLong());
         String value = String.valueOf(r.nextLong());
 
         c.add(Bytes.toBytes(key), value);
       }
     }
-
   }
 
 
@@ -41,7 +42,7 @@ public class CacheBenchmark {
     public void setup() {
       Random r = new Random(42);
 
-      for ( int i = 0; i < 1000; i++) {
+      for ( int i = 0; i < STARTING_ROWS; i++) {
         long key = Math.abs(r.nextLong());
         String value = String.valueOf(r.nextLong());
 
@@ -50,54 +51,64 @@ public class CacheBenchmark {
     }
   }
 
+  private String doGet(LocationCache c) {
+    byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
+    return c.get(key);
+  }
+
+  private void doPut(LocationCache cache) {
+    byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
+    String value = String.valueOf(ThreadLocalRandom.current().nextLong());
+    cache.add(key, value);
+  }
+
+  private void doDelete(LocationCache cache) {
+    byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
+    cache.remove(key);
+  }
+
+  /****** LOCKING ****************/
   @org.openjdk.jmh.annotations.Benchmark
   @Group("locking")
   @GroupThreads(6)
   public String testGetLocking(LockingCache cacheHolder) {
-    byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
-    return cacheHolder.c.get(key);
+    return doGet(cacheHolder.c);
   }
 
   @org.openjdk.jmh.annotations.Benchmark
   @Group("locking")
   @GroupThreads(1)
   public void testPutLocking(LockingCache cacheHolder) {
-    byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
-    String value = String.valueOf(ThreadLocalRandom.current().nextLong());
-    cacheHolder.c.add(key, value);
+    doPut(cacheHolder.c);
   }
-
 
   @org.openjdk.jmh.annotations.Benchmark
   @Group("locking")
   @GroupThreads(1)
-  public void testRemoveLocking(ConcurrentCache cacheHolder) {
-    byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
-    cacheHolder.c.remove(key);
+  public void testRemoveLocking(LockingCache cacheHolder) {
+    doDelete(cacheHolder.c);
   }
 
+
+  /****** BASELINE ********************/
   @org.openjdk.jmh.annotations.Benchmark
   @Group("baseline")
   @GroupThreads(6)
   public String testGetConcurrent(ConcurrentCache cacheHolder) {
-    byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
-    return cacheHolder.c.get(key);
+    return doGet(cacheHolder.c);
   }
 
   @org.openjdk.jmh.annotations.Benchmark
   @Group("baseline")
   @GroupThreads(1)
   public void testPutConcurrent(ConcurrentCache cacheHolder) {
-    byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
-    String value = String.valueOf(ThreadLocalRandom.current().nextLong());
-    cacheHolder.c.add(key, value);
+    doPut(cacheHolder.c);
   }
 
   @org.openjdk.jmh.annotations.Benchmark
   @Group("baseline")
   @GroupThreads(1)
   public void testRemoveConcurrent(ConcurrentCache cacheHolder) {
-    byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
-    cacheHolder.c.remove(key);
+    doDelete(cacheHolder.c);
   }
 }

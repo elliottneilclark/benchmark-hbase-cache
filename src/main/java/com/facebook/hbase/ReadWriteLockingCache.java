@@ -8,9 +8,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-/**
- * Created by elliott on 10/26/15.
- */
 public class ReadWriteLockingCache implements LocationCache {
   private TreeMap<byte[], String> locations = new TreeMap<byte[], String>(Bytes.BYTES_COMPARATOR);
   ReadWriteLock readWriteLock = new ReentrantReadWriteLock(false);
@@ -19,8 +16,12 @@ public class ReadWriteLockingCache implements LocationCache {
   public void add(byte[] key, String value) {
     Lock l = readWriteLock.writeLock();
     l.lock();
-    locations.put(key, value);
-    l.unlock();
+    try {
+      locations.put(key, value);
+    } finally {
+      l.unlock();
+    }
+
   }
 
   @Override
@@ -42,9 +43,13 @@ public class ReadWriteLockingCache implements LocationCache {
   public void remove(byte[] key) {
     Lock l = readWriteLock.writeLock();
     l.lock();
-    Map.Entry<byte[], String> e = locations.floorEntry(key);
-    if (e != null) {
-      locations.remove(e.getKey());
+    try {
+      Map.Entry<byte[], String> e = locations.floorEntry(key);
+      if (e != null) {
+        locations.remove(e.getKey());
+      }
+    } finally {
+      l.unlock();
     }
   }
 }
