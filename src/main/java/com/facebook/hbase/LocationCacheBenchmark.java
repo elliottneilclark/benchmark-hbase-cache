@@ -24,18 +24,26 @@ import java.util.concurrent.TimeUnit;
 public class LocationCacheBenchmark {
 
   private String doGet(LocationCache c) {
-    byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
+    byte[] key = getKeyBytes();
     return c.get(key);
   }
 
+  private byte[] getKeyBytes() {
+    long l;
+    do {
+      l = ThreadLocalRandom.current().nextLong();
+    } while (l == Long.MIN_VALUE);
+    return Bytes.toBytes(Math.abs(l));
+  }
+
   private void doPut(LocationCache cache) {
-    byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
+    byte[] key = getKeyBytes();
     String value = String.valueOf(ThreadLocalRandom.current().nextLong());
     cache.add(key, value);
   }
 
   private void doDelete(LocationCache cache) {
-    byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
+    byte[] key = getKeyBytes();
     cache.remove(key);
   }
 

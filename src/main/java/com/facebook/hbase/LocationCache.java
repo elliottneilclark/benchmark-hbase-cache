@@ -14,6 +14,8 @@ import java.util.TreeMap;
 @State(Scope.Group)
 public abstract class LocationCache {
   private static final int SEED = 42;
+  @Param({"5", "5000", "100000"})
+  public int startingKeys;
 
   abstract void add(byte[] key, String value);
 
@@ -27,19 +29,20 @@ public abstract class LocationCache {
     }
   }
 
-  @Param({"10","1000"})
-  public int startingKeys;
-
   @Setup
   public void setup() {
     Random r = new Random(SEED);
-    Map<byte[], String> m = new TreeMap<byte[], String>(Bytes.BYTES_COMPARATOR);
+    Map<byte[], String> m = new TreeMap<>(Bytes.BYTES_COMPARATOR);
 
     for (int i = 0; i < startingKeys; i++) {
-      long key = Math.abs(r.nextLong());
+      long l;
+      do {
+        l = r.nextLong();
+      } while (l == Long.MIN_VALUE);
+
       String value = String.valueOf(r.nextLong());
 
-      m.put(Bytes.toBytes(key), value);
+      m.put(Bytes.toBytes(l), value);
     }
     addAll(m);
   }
