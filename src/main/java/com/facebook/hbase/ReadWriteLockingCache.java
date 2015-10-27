@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class ReadWriteLockingCache extends LocationCache {
   ReadWriteLock readWriteLock = new ReentrantReadWriteLock(false);
-  private TreeMap<byte[], String> locations = new TreeMap<byte[], String>(Bytes.BYTES_COMPARATOR);
+  private TreeMap<byte[], String> locations = new TreeMap<>(Bytes.BYTES_COMPARATOR);
 
   @Override
   public void add(byte[] key, String value) {

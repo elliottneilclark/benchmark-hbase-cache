@@ -11,13 +11,13 @@ public class CopyOnWriteCache extends LocationCache {
   AtomicReference<TreeMap<byte[], String>>
       currentMap
       =
-      new AtomicReference<TreeMap<byte[], String>>(new TreeMap<byte[], String>(Bytes.BYTES_COMPARATOR));
+      new AtomicReference<>(new TreeMap<byte[], String>(Bytes.BYTES_COMPARATOR));
 
   @Override
   void add(byte[] key, String value) {
     while (true) {
       TreeMap<byte[], String> m = currentMap.get();
-      TreeMap<byte[], String> newMap = new TreeMap<byte[], String>(m);
+      TreeMap<byte[], String> newMap = new TreeMap<>(m);
 
       newMap.put(key, value);
       if (currentMap.compareAndSet(m, newMap)) {
@@ -29,7 +29,7 @@ public class CopyOnWriteCache extends LocationCache {
   void addAll(Map<byte[], String> map) {
     while (true) {
       TreeMap<byte[], String> m = currentMap.get();
-      TreeMap<byte[], String> newMap = new TreeMap<byte[], String>(m);
+      TreeMap<byte[], String> newMap = new TreeMap<>(m);
 
       for (Map.Entry<byte[], String> e : map.entrySet()) {
         newMap.put(e.getKey(), e.getValue());

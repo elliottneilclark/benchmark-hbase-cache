@@ -14,7 +14,7 @@ import java.util.TreeMap;
 @State(Scope.Group)
 public abstract class LocationCache {
   private static final int SEED = 42;
-  @Param({"5", "5000", "100000"})
+  @Param({"5", "5000"})
   public int startingKeys;
 
   abstract void add(byte[] key, String value);

@@ -10,12 +10,12 @@ public class CopyOnWriteSynchronizedCache extends LocationCache {
 
   AtomicReference<TreeMap<byte[], String>>
       currentMap =
-      new AtomicReference<TreeMap<byte[], String>>(new TreeMap<byte[], String>(Bytes.BYTES_COMPARATOR));
+      new AtomicReference<>(new TreeMap<byte[], String>(Bytes.BYTES_COMPARATOR));
 
   @Override
   synchronized void add(byte[] key, String value) {
     TreeMap<byte[], String> m = currentMap.get();
-    TreeMap<byte[], String> newMap = new TreeMap<byte[], String>(m);
+    TreeMap<byte[], String> newMap = new TreeMap<>(m);
 
     newMap.put(key, value);
     currentMap.set(newMap);
@@ -23,7 +23,7 @@ public class CopyOnWriteSynchronizedCache extends LocationCache {
 
   synchronized void addAll(Map<byte[], String> map) {
     TreeMap<byte[], String> m = currentMap.get();
-    TreeMap<byte[], String> newMap = new TreeMap<byte[], String>(m);
+    TreeMap<byte[], String> newMap = new TreeMap<>(m);
 
     for (Map.Entry<byte[], String> e : map.entrySet()) {
       newMap.put(e.getKey(), e.getValue());
@@ -43,7 +43,7 @@ public class CopyOnWriteSynchronizedCache extends LocationCache {
   @Override
   synchronized void remove(byte[] key) {
     TreeMap<byte[], String> m = currentMap.get();
-    TreeMap<byte[], String> newMap = new TreeMap<byte[], String>(m);
+    TreeMap<byte[], String> newMap = new TreeMap<>(m);
 
     Map.Entry<byte[], String> e = newMap.floorEntry(key);
     if (e != null) {

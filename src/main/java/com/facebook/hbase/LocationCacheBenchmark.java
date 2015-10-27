@@ -17,9 +17,9 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Measurement(iterations = 10, time = 30, timeUnit = TimeUnit.SECONDS)
-@Warmup(iterations = 5, time = 30, timeUnit = TimeUnit.SECONDS)
-@Timeout(time = 10, timeUnit = TimeUnit.MINUTES)
+@Measurement(iterations = 10, time = 10, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 10, time = 5, timeUnit = TimeUnit.SECONDS)
+@Timeout(time = 12, timeUnit = TimeUnit.MINUTES)
 @Fork(value = 5, jvmArgsPrepend = "-server")
 public class LocationCacheBenchmark {
 
@@ -52,21 +52,21 @@ public class LocationCacheBenchmark {
    ****************/
   @Benchmark
   @Group("cow_synchronized")
-  @GroupThreads(14)
+  @GroupThreads(20)
   public String testGet(CopyOnWriteSynchronizedCache cache) {
     return doGet(cache);
   }
 
   @Benchmark
   @Group("cow_synchronized")
-  @GroupThreads(1)
+  @GroupThreads(2)
   public void testPut(CopyOnWriteSynchronizedCache cache) {
     doPut(cache);
   }
 
   @Benchmark
   @Group("cow_synchronized")
-  @GroupThreads(1)
+  @GroupThreads(2)
   public void testRemove(CopyOnWriteSynchronizedCache cache) {
     doDelete(cache);
   }
@@ -76,21 +76,21 @@ public class LocationCacheBenchmark {
    ****************/
   @Benchmark
   @Group("cow")
-  @GroupThreads(14)
+  @GroupThreads(20)
   public String testGet(CopyOnWriteCache cache) {
     return doGet(cache);
   }
 
   @Benchmark
   @Group("cow")
-  @GroupThreads(1)
+  @GroupThreads(2)
   public void testPut(CopyOnWriteCache cache) {
     doPut(cache);
   }
 
   @Benchmark
   @Group("cow")
-  @GroupThreads(1)
+  @GroupThreads(2)
   public void testRemove(CopyOnWriteCache cache) {
     doDelete(cache);
   }
@@ -100,21 +100,21 @@ public class LocationCacheBenchmark {
    ****************/
   @Benchmark
   @Group("locking")
-  @GroupThreads(14)
+  @GroupThreads(20)
   public String testGet(ReadWriteLockingCache cache) {
     return doGet(cache);
   }
 
   @Benchmark
   @Group("locking")
-  @GroupThreads(1)
+  @GroupThreads(2)
   public void testPut(ReadWriteLockingCache cache) {
     doPut(cache);
   }
 
   @Benchmark
   @Group("locking")
-  @GroupThreads(1)
+  @GroupThreads(2)
   public void testRemove(ReadWriteLockingCache cache) {
     doDelete(cache);
   }
@@ -125,21 +125,21 @@ public class LocationCacheBenchmark {
    ********************/
   @Benchmark
   @Group("baseline")
-  @GroupThreads(14)
+  @GroupThreads(20)
   public String testGet(ConcurrentCache cache) {
     return doGet(cache);
   }
 
   @Benchmark
   @Group("baseline")
-  @GroupThreads(1)
+  @GroupThreads(2)
   public void testPut(ConcurrentCache cache) {
     doPut(cache);
   }
 
   @Benchmark
   @Group("baseline")
-  @GroupThreads(1)
+  @GroupThreads(2)
   public void testRemove(ConcurrentCache cache) {
     doDelete(cache);
   }

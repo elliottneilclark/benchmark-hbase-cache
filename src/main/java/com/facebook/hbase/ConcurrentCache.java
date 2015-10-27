@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class ConcurrentCache extends LocationCache {
   private ConcurrentSkipListMap<byte[], String>
       locations =
-      new ConcurrentSkipListMap<byte[], String>(Bytes.BYTES_COMPARATOR);
+      new ConcurrentSkipListMap<>(Bytes.BYTES_COMPARATOR);
 
   public void add(byte[] key, String value) {
     locations.put(key, value);
