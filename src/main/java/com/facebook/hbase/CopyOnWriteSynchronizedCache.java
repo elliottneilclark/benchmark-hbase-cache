@@ -21,6 +21,16 @@ public class CopyOnWriteSynchronizedCache extends LocationCache {
     currentMap.set(newMap);
   }
 
+  synchronized void addAll(Map<byte[], String> map) {
+    TreeMap<byte[], String> m = currentMap.get();
+    TreeMap<byte[], String> newMap = new TreeMap<byte[], String>(m);
+
+    for (Map.Entry<byte[], String> e : map.entrySet()) {
+      newMap.put(e.getKey(), e.getValue());
+    }
+    currentMap.set(newMap);
+  }
+
   @Override
   String get(byte[] lookingFor) {
     Map.Entry<byte[], String> e = currentMap.get().floorEntry(lookingFor);

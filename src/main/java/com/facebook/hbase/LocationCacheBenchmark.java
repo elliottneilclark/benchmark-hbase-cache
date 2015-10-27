@@ -5,15 +5,21 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Group;
 import org.openjdk.jmh.annotations.GroupThreads;
+import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Timeout;
+import org.openjdk.jmh.annotations.Warmup;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-public class CacheBenchmark {
+@Measurement(iterations = 5, time = 20, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 10, time = 2, timeUnit = TimeUnit.SECONDS)
+@Timeout(time = 15, timeUnit = TimeUnit.MINUTES)
+public class LocationCacheBenchmark {
 
   private String doGet(LocationCache c) {
     byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
@@ -31,7 +37,9 @@ public class CacheBenchmark {
     cache.remove(key);
   }
 
-  /****** Copy On Write Synchronized ****************/
+  /******
+   * Copy On Write Synchronized
+   ****************/
   @Benchmark
   @Group("cow_synchronized")
   @GroupThreads(14)
@@ -53,7 +61,9 @@ public class CacheBenchmark {
     doDelete(cache);
   }
 
-  /****** Copy On Write ****************/
+  /******
+   * Copy On Write
+   ****************/
   @Benchmark
   @Group("cow")
   @GroupThreads(14)
@@ -75,7 +85,9 @@ public class CacheBenchmark {
     doDelete(cache);
   }
 
-  /****** LOCKING ****************/
+  /******
+   * locking
+   ****************/
   @Benchmark
   @Group("locking")
   @GroupThreads(14)
@@ -98,7 +110,9 @@ public class CacheBenchmark {
   }
 
 
-  /****** BASELINE ********************/
+  /******
+   * BASELINE
+   ********************/
   @Benchmark
   @Group("baseline")
   @GroupThreads(14)
