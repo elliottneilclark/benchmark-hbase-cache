@@ -52,7 +52,7 @@ public class CacheBenchmark {
 
   @org.openjdk.jmh.annotations.Benchmark
   @Group("locking")
-  @GroupThreads(3)
+  @GroupThreads(6)
   public String testGetLocking(LockingCache cacheHolder) {
     byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
     return cacheHolder.c.get(key);
@@ -69,8 +69,16 @@ public class CacheBenchmark {
 
 
   @org.openjdk.jmh.annotations.Benchmark
+  @Group("locking")
+  @GroupThreads(1)
+  public void testRemoveLocking(ConcurrentCache cacheHolder) {
+    byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
+    cacheHolder.c.remove(key);
+  }
+
+  @org.openjdk.jmh.annotations.Benchmark
   @Group("baseline")
-  @GroupThreads(3)
+  @GroupThreads(6)
   public String testGetConcurrent(ConcurrentCache cacheHolder) {
     byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
     return cacheHolder.c.get(key);
@@ -90,7 +98,6 @@ public class CacheBenchmark {
   @GroupThreads(1)
   public void testRemoveConcurrent(ConcurrentCache cacheHolder) {
     byte[] key = Bytes.toBytes(Math.abs(ThreadLocalRandom.current().nextLong()));
-    String value = String.valueOf(ThreadLocalRandom.current().nextLong());
-    cacheHolder.c.add(key, value);
+    cacheHolder.c.remove(key);
   }
 }
