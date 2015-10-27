@@ -31,23 +31,23 @@ public class CacheBenchmark {
     cache.remove(key);
   }
 
-  /****** Copy On Write synchronized ****************/
+  /****** Copy On Write Synchronized ****************/
   @Benchmark
-  @Group("cow.synchronized")
-  @GroupThreads(6)
+  @Group("cow_synchronized")
+  @GroupThreads(14)
   public String testGet(CopyOnWriteSynchronizedCache cache) {
     return doGet(cache);
   }
 
   @Benchmark
-  @Group("cow.synchronized")
+  @Group("cow_synchronized")
   @GroupThreads(1)
   public void testPut(CopyOnWriteSynchronizedCache cache) {
     doPut(cache);
   }
 
   @Benchmark
-  @Group("cow.synchronized")
+  @Group("cow_synchronized")
   @GroupThreads(1)
   public void testRemove(CopyOnWriteSynchronizedCache cache) {
     doDelete(cache);
@@ -56,7 +56,7 @@ public class CacheBenchmark {
   /****** Copy On Write ****************/
   @Benchmark
   @Group("cow")
-  @GroupThreads(6)
+  @GroupThreads(14)
   public String testGet(CopyOnWriteCache cache) {
     return doGet(cache);
   }
@@ -78,7 +78,7 @@ public class CacheBenchmark {
   /****** LOCKING ****************/
   @Benchmark
   @Group("locking")
-  @GroupThreads(6)
+  @GroupThreads(14)
   public String testGet(ReadWriteLockingCache cache) {
     return doGet(cache);
   }
@@ -101,7 +101,7 @@ public class CacheBenchmark {
   /****** BASELINE ********************/
   @Benchmark
   @Group("baseline")
-  @GroupThreads(6)
+  @GroupThreads(14)
   public String testGet(ConcurrentCache cache) {
     return doGet(cache);
   }
